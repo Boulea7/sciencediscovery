@@ -298,7 +298,6 @@ import {
   buildConversationBlocks,
   followSessionTitleRefinement,
   forgetSession,
-  getVisibleProjects,
   messageForSessionTitle,
   sortSessionRuns,
 } from "./session/model.js";
@@ -4005,7 +4004,6 @@ export function App({ initialToken }: { initialToken?: string } = {}) {
     projectId: activeProjectId,
     sessions: artifactSessions,
   });
-  const visibleProjects = getVisibleProjects(projects, activeProjectId, projectsExpanded);
   const activeProjectLabel = activeProject
     ? resourceLabelWithDraft(renameTarget, renameDraft, "project", activeProject.id, activeProject.name)
     : t("app.workspace");
@@ -4182,9 +4180,9 @@ export function App({ initialToken }: { initialToken?: string } = {}) {
               onToggle={() => { setOpenProjectMenuId(undefined); setProjectsExpanded((current) => !current); }}
               panelId="projects-panel-content"
             />
-            <div className="sidebar-panel-content" id="projects-panel-content">
+            {projectsExpanded ? <div className="sidebar-panel-content" id="projects-panel-content">
               <div className="nav-list">
-              {!projectsLoaded ? <SkeletonRows className="nav-skeleton" count={3} /> : visibleProjects.map((project) => {
+              {!projectsLoaded ? <SkeletonRows className="nav-skeleton" count={3} /> : projects.map((project) => {
                 const target = { id: project.id, kind: "project" as const, label: project.name };
                 const inlineTarget = renameTarget?.kind === "project"
                   && renameTarget.id === project.id
@@ -4234,7 +4232,7 @@ export function App({ initialToken }: { initialToken?: string } = {}) {
                 </div>
               })}
               </div>
-            </div>
+            </div> : null}
           </div>
           {activeProject ? <>
             <SidebarPanelResizer
@@ -5235,7 +5233,6 @@ export {
   ComposerRunButton,
   followSessionTitleRefinement,
   forgetSession,
-  getVisibleProjects,
   hydrateSessionRunTimeline,
   hydrateTimelineSubagents,
   hydrateTerminalRunTimelines,

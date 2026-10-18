@@ -2770,6 +2770,7 @@ async function refineFirstSessionTitle(
     apiToken,
     firstMessage: firstRun.prompt,
     model,
+    proxy: resolveProxyForUrl(store.resolveProxy(model.proxyPolicy), model.baseUrl),
   });
   let updatedSession = store.getSession(session.id);
   if (refined.title !== provisionalTitle) {

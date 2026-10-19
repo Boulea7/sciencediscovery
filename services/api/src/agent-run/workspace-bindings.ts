@@ -53,6 +53,7 @@ export interface RemoteExecutionTarget {
 }
 
 export interface WorkspaceExecutionBindingOptions {
+  explicitHandoff?: boolean;
   beginExternalWait?: () => (() => void);
   agentId: string;
   rootRunId?: string;
@@ -274,7 +275,7 @@ export function createWorkspaceExecutionBindings(
         ...(toolCallId ? { toolCallId } : {}),
         turnId: options.executionId,
         workspaceRoot: options.workspaceRoot,
-        parentSubagentId: options.parentSubagentId,
+        parentSubagentId: options.parentSubagentId, explicitHandoff: options.explicitHandoff,
       };
   };
   const executionOwner = { sessionId: options.sessionId, agentId: options.agentId };
@@ -363,7 +364,7 @@ export function createWorkspaceExecutionBindings(
           agentId: options.agentId, code: ticket.command, cwd: ticket.cwd, directAuthorization,
           executionId: id, dispatch, completionStatus, executionTimeoutMs: options.executionTimeoutMs,
           maxOutputBytes: options.maxOutputBytes, maxWorkspaceBytes: options.maxWorkspaceBytes,
-          artifactPathPrefix: options.artifactPathPrefix, parentSubagentId: options.parentSubagentId,
+          artifactPathPrefix: options.artifactPathPrefix, parentSubagentId: options.parentSubagentId, explicitHandoff: options.explicitHandoff,
           permissionEpoch: options.permission.getEpoch(), runnerId: ticket.runnerId, runnerClient: resolveExecutionTarget(ticket.runnerId).runnerClient,
           ...(ticket.runnerWorkspaceKey ? { runnerWorkspaceKey: ticket.runnerWorkspaceKey } : {}),
           ...(resolveExecutionTarget(ticket.runnerId).remoteHostAlias ? { remoteHostAlias: resolveExecutionTarget(ticket.runnerId).remoteHostAlias } : {}),
@@ -576,7 +577,7 @@ export function createWorkspaceExecutionBindings(
         ...(toolCallId ? { toolCallId } : {}),
         turnId: options.executionId,
         workspaceRoot: options.workspaceRoot,
-        parentSubagentId: options.parentSubagentId,
+        parentSubagentId: options.parentSubagentId, explicitHandoff: options.explicitHandoff,
       });
     },
     executeShell: async (...args) => {
@@ -726,7 +727,7 @@ export function createWorkspaceExecutionBindings(
           ...(toolCallId ? { toolCallId } : {}),
           turnId: options.executionId,
           workspaceRoot: options.workspaceRoot,
-          parentSubagentId: options.parentSubagentId,
+          parentSubagentId: options.parentSubagentId, explicitHandoff: options.explicitHandoff,
         });
       },
     } : {}),
